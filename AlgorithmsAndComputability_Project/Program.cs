@@ -51,7 +51,7 @@ namespace AlgorithmsAndComputability_Project
         public static void ProcessCSV(ref int[][] projects, ref int[][] experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
         {
             string fileName = "INPUT.csv";
-            string path = Path.Combine(Environment.CurrentDirectory, @"input\", fileName);
+            string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
 
             using (StreamReader sr = new StreamReader(path))
             {
