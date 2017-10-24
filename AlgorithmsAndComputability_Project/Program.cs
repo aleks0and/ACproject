@@ -12,8 +12,8 @@ namespace AlgorithmsAndComputability_Project
         static void Main(string[] args)
         {
             //initializing arguments
-            int[][] projects = null;
-            int[][] experts = null;
+            List<List<int>> projects = new List<List<int>>();
+            List<List<int>> experts = new List<List<int>>();
             int noOfProjects = 0;
             int noOfExperts = 0;
             int noOfFeatures = 0;
@@ -21,34 +21,40 @@ namespace AlgorithmsAndComputability_Project
             //processing csv
             ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
 
-            //CHECKING: printing projects
-            Console.Write(Environment.NewLine);
-            Console.Write("Projects vectors: ");
-            Console.Write(Environment.NewLine);
-            for (int k = 0; k < noOfProjects; k++)
-            {
-                for (int j = 0; j < noOfFeatures; j++)
-                {
-                    Console.Write(projects[k][j] + " ");
-                }
-                Console.Write(Environment.NewLine);
-            }
+            ////CHECKING: printing numbers of projects, experts, features
+            //Console.WriteLine("Number of projects: " + noOfProjects);
+            //Console.WriteLine("Number of experts: " + noOfExperts);
+            //Console.WriteLine("Number of features: " + noOfFeatures);
 
-            //CHECKING: printing experts
-            Console.Write(Environment.NewLine);
-            Console.Write("Experts vectors: ");
-            Console.Write(Environment.NewLine);
-            for (int p = 0; p < noOfExperts; p++)
-            {
-                for (int j = 0; j < noOfFeatures; j++)
-                {
-                    Console.Write(experts[p][j] + " ");
-                }
-                Console.Write(Environment.NewLine);
-            }
+            ////CHECKING: printing projects
+            //Console.Write(Environment.NewLine);
+            //Console.Write("Projects vectors: ");
+            //Console.Write(Environment.NewLine);
+            //for (int k = 0; k < noOfProjects; k++)
+            //{
+            //    for (int j = 0; j < noOfFeatures; j++)
+            //    {
+            //        Console.Write(projects.ElementAt(k).ElementAt(j) + " ");
+            //    }
+            //    Console.Write(Environment.NewLine);
+            //}
+
+            ////CHECKING: printing experts
+            //Console.Write(Environment.NewLine);
+            //Console.Write("Experts vectors: ");
+            //Console.Write(Environment.NewLine);
+            //for (int p = 0; p < noOfExperts; p++)
+            //{
+            //    for (int j = 0; j < noOfFeatures; j++)
+            //    {
+            //        Console.Write(experts.ElementAt(p).ElementAt(j) + " ");
+            //    }
+            //    Console.Write(Environment.NewLine);
+            //}
         }
 
-        public static void ProcessCSV(ref int[][] projects, ref int[][] experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
+
+        public static void ProcessCSV(ref List<List<int>> projects, ref List<List<int>> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
         {
             string fileName = "INPUT.csv";
             string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
@@ -63,23 +69,6 @@ namespace AlgorithmsAndComputability_Project
                 noOfExperts = Convert.ToInt32(values[1]);
                 noOfFeatures = Convert.ToInt32(values[2]);
 
-                //CHECKING: printing numbers of projects, experts, features
-                Console.WriteLine("Number of projects: " + noOfProjects);
-                Console.WriteLine("Number of experts: " + noOfExperts);
-                Console.WriteLine("Number of features: " + noOfFeatures);
-
-                //initializing projects and experts 2D arrays
-                projects = new int[noOfProjects][];
-                for (int size = 0; size < noOfProjects; size++)
-                {
-                    projects[size] = new int[noOfFeatures];
-                }
-                experts = new int[noOfExperts][];
-                for (int size = 0; size < noOfExperts; size++)
-                {
-                    experts[size] = new int[noOfFeatures];
-                }
-
                 //reading projects
                 int ind = 0;
                 int temp = noOfProjects;
@@ -89,14 +78,16 @@ namespace AlgorithmsAndComputability_Project
                     char delimiter_p = ';';
                     string[] values_p = currentLine.Split(delimiter_p);
 
+                    List<int> proj = new List<int>();
                     for (int i = 0; i < noOfFeatures; i++)
                     {
-                        projects[ind][i] = Convert.ToInt32(values_p[i]);
+                        proj.Insert(i, Convert.ToInt32(values_p[i]));
                     }
+                    projects.Insert(ind, proj);
                     ind++;
                     temp--;
                 }
-                
+
                 //reading experts
                 ind = 0;
                 temp = noOfExperts;
@@ -106,15 +97,20 @@ namespace AlgorithmsAndComputability_Project
                     char delimiter_p = ';';
                     string[] values_p = currentLine.Split(delimiter_p);
 
+                    List<int> exp = new List<int>();
                     for (int i = 0; i < noOfFeatures; i++)
                     {
-                        experts[ind][i] = Convert.ToInt32(values_p[i]);
+                        exp.Insert(i, Convert.ToInt32(values_p[i]));
                     }
+                    experts.Insert(ind, exp);
                     ind++;
                     temp--;
                 }
             }
         }
         
+
+
+
     }
 }
