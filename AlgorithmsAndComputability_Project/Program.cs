@@ -1,4 +1,34 @@
-﻿using System;
+﻿//-----FOR CHECKING IF PROCESSCSV FUNCTION EXECUTED SUCCESSFULLY
+////CHECKING: printing numbers of projects, experts, features
+//Console.WriteLine("Number of projects: " + noOfProjects);
+//Console.WriteLine("Number of experts: " + noOfExperts);
+//Console.WriteLine("Number of features: " + noOfFeatures);
+////CHECKING: printing projects
+//Console.Write(Environment.NewLine);
+//Console.Write("Projects vectors: ");
+//Console.Write(Environment.NewLine);
+//for (int k = 0; k < noOfProjects; k++)
+//{
+//    for (int j = 0; j < noOfFeatures; j++)
+//    {
+//        Console.Write(projects.ElementAt(k).ElementAt(j) + " ");
+//    }
+//    Console.Write(Environment.NewLine);
+//}
+////CHECKING: printing experts
+//Console.Write(Environment.NewLine);
+//Console.Write("Experts vectors: ");
+//Console.Write(Environment.NewLine);
+//for (int p = 0; p < noOfExperts; p++)
+//{
+//    for (int j = 0; j < noOfFeatures; j++)
+//    {
+//        Console.Write(experts.ElementAt(p).ElementAt(j) + " ");
+//    }
+//    Console.Write(Environment.NewLine);
+//}
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,6 +39,13 @@ namespace AlgorithmsAndComputability_Project
 {
     class Program
     {
+        struct Expert
+        {
+            public List<int> expertVector;
+            public int weight;
+            public int assignedProject;
+        }
+
         static void Main(string[] args)
         {
             //initializing arguments
@@ -21,36 +58,21 @@ namespace AlgorithmsAndComputability_Project
             //processing csv
             ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
 
-            ////CHECKING: printing numbers of projects, experts, features
-            //Console.WriteLine("Number of projects: " + noOfProjects);
-            //Console.WriteLine("Number of experts: " + noOfExperts);
-            //Console.WriteLine("Number of features: " + noOfFeatures);
+            //creating struct Expert for each expert with weight -1 and assignedProject -1
+            List<Expert> expertStructs = new List<Expert>();
+            for(int i = 0; i < noOfExperts; i++)
+            {
+                Expert e = new Expert();
+                e.assignedProject = -1;
+                e.weight = -1;
+                e.expertVector = experts.ElementAt(i);
 
-            ////CHECKING: printing projects
-            //Console.Write(Environment.NewLine);
-            //Console.Write("Projects vectors: ");
-            //Console.Write(Environment.NewLine);
-            //for (int k = 0; k < noOfProjects; k++)
-            //{
-            //    for (int j = 0; j < noOfFeatures; j++)
-            //    {
-            //        Console.Write(projects.ElementAt(k).ElementAt(j) + " ");
-            //    }
-            //    Console.Write(Environment.NewLine);
-            //}
+                expertStructs.Insert(i, e);
+            }
+            
+            //using List<List<int>> projects and List<Expert> expertStructs 
+            //...
 
-            ////CHECKING: printing experts
-            //Console.Write(Environment.NewLine);
-            //Console.Write("Experts vectors: ");
-            //Console.Write(Environment.NewLine);
-            //for (int p = 0; p < noOfExperts; p++)
-            //{
-            //    for (int j = 0; j < noOfFeatures; j++)
-            //    {
-            //        Console.Write(experts.ElementAt(p).ElementAt(j) + " ");
-            //    }
-            //    Console.Write(Environment.NewLine);
-            //}
         }
 
 
