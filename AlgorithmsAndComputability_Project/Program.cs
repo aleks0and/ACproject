@@ -1,34 +1,4 @@
-﻿//-----FOR CHECKING IF PROCESSCSV FUNCTION EXECUTED SUCCESSFULLY
-////CHECKING: printing numbers of projects, experts, features
-//Console.WriteLine("Number of projects: " + noOfProjects);
-//Console.WriteLine("Number of experts: " + noOfExperts);
-//Console.WriteLine("Number of features: " + noOfFeatures);
-////CHECKING: printing projects
-//Console.Write(Environment.NewLine);
-//Console.Write("Projects vectors: ");
-//Console.Write(Environment.NewLine);
-//for (int k = 0; k < noOfProjects; k++)
-//{
-//    for (int j = 0; j < noOfFeatures; j++)
-//    {
-//        Console.Write(projects.ElementAt(k).ElementAt(j) + " ");
-//    }
-//    Console.Write(Environment.NewLine);
-//}
-////CHECKING: printing experts
-//Console.Write(Environment.NewLine);
-//Console.Write("Experts vectors: ");
-//Console.Write(Environment.NewLine);
-//for (int p = 0; p < noOfExperts; p++)
-//{
-//    for (int j = 0; j < noOfFeatures; j++)
-//    {
-//        Console.Write(experts.ElementAt(p).ElementAt(j) + " ");
-//    }
-//    Console.Write(Environment.NewLine);
-//}
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -39,7 +9,7 @@ namespace AlgorithmsAndComputability_Project
 {
     class Program
     {
-        struct Expert
+        public struct Expert
         {
             public List<int> expertVector;
             public int weight;
@@ -55,10 +25,10 @@ namespace AlgorithmsAndComputability_Project
             int noOfExperts = 0;
             int noOfFeatures = 0;
 
-            //processing csv
+            //processing csv (assigning values to projects, experts, noOfProjects, noOfExperts, noOfFeatures)
             ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
 
-            //creating struct Expert for each expert with weight -1 and assignedProject -1
+            //creating struct Expert for each expert with weight = -1 and assignedProject = -1
             List<Expert> expertStructs = new List<Expert>();
             for(int i = 0; i < noOfExperts; i++)
             {
@@ -69,12 +39,53 @@ namespace AlgorithmsAndComputability_Project
 
                 expertStructs.Insert(i, e);
             }
+
+
+            //after having above, we can go with implementation of the pseudocode
+            //using List<List<int>> projects and List<Expert> expertStructs for assigning experts to projects
             
-            //using List<List<int>> projects and List<Expert> expertStructs 
-            //...
+            CalculateExpertsWeights(ref expertStructs);
+
+            SortExperts(ref expertStructs);
+
+            List<int> sum = SumExperts(expertStructs, noOfFeatures, noOfExperts);
+
+            int indProj = 0;
+            List<int> oldSum = new List<int>();
+            
+            while(oldSum != sum /*&& (experts are not finished || projects are not finished)*/)
+            {
+                //TODO
+            }
 
         }
 
+        public static void CalculateExpertsWeights(ref List<Expert> le)
+        {
+            //TODO
+        }
+
+        public static void SortExperts(ref List<Expert> le)
+        {
+            //TODO
+        }
+
+        public static List<int> SumExperts(List<Expert> le, int noOfFeatures, int noOfExperts)
+        {
+            List<int> sum = new List<int>();
+
+            for(int i = 0; i < noOfFeatures; i++)
+            {
+                int sumField = 0;
+                for(int j = 0; j < noOfExperts; j++)
+                {
+                    sumField += le.ElementAt(j).expertVector.ElementAt(i);
+                }
+                sum.Insert(i, sumField);
+            }
+
+            return sum;
+        }
 
         public static void ProcessCSV(ref List<List<int>> projects, ref List<List<int>> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
         {
