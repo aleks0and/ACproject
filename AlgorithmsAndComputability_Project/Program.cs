@@ -16,6 +16,11 @@ namespace AlgorithmsAndComputability_Project
             public int assignedProject;
         }
 
+        public struct Project
+        {
+            public List<int> projectVector;
+        }
+
         static void Main(string[] args)
         {
             //initializing arguments
@@ -39,17 +44,31 @@ namespace AlgorithmsAndComputability_Project
 
                 expertStructs.Insert(i, e);
             }
+            List<Project> projectStructs = new List<Project>();
+            for (int i = 0; i < noOfProjects; i++)
+            {
+                Project p = new Project();
+                p.projectVector = projects.ElementAt(i);
+
+                projectStructs.Insert(i, p);
+            }
+
 
 
             //after having above, we can go with implementation of the pseudocode
             //using List<List<int>> projects and List<Expert> expertStructs for assigning experts to projects
-            
-            CalculateExpertsWeights(ref expertStructs);
-
-            SortExperts(ref expertStructs);
 
             List<int> sum = SumExperts(expertStructs, noOfFeatures, noOfExperts);
+            for (int y = 0; y < noOfFeatures; y++)
+            {
+                Console.WriteLine(sum[y]);
+            }
+            Console.WriteLine();
 
+            CalculateExpertsWeights(ref expertStructs, sum);
+
+            SortExperts(ref expertStructs);
+            
             int indProj = 0;
             List<int> oldSum = new List<int>();
             
@@ -60,9 +79,32 @@ namespace AlgorithmsAndComputability_Project
 
         }
 
-        public static void CalculateExpertsWeights(ref List<Expert> le)
+        public static void CalculateExpertsWeights(ref List<Expert> le, List<int> sum)
         {
-            //TODO
+            List<int> sumWeight = new List<int>(sum);
+            int features = sum.Count;
+            int temp = 0;
+            while (temp != features)
+            {
+                int max = -1;
+                int maxind = -1;
+                for (int i = 0; i < features; i++)
+                {
+                    if (sum.ElementAt(i) > max)
+                    {
+                        max = sum.ElementAt(i);
+                        maxind = i;
+                    }
+                }
+                sum[maxind] = -99;
+                sumWeight[maxind] = temp + 1;
+                temp++;
+            }
+
+            for(int y=0;y<features;y++)
+            {
+                Console.WriteLine(sumWeight[y]);
+            }
         }
 
         public static void SortExperts(ref List<Expert> le)
