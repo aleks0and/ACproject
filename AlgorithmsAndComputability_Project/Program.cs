@@ -92,6 +92,19 @@ namespace AlgorithmsAndComputability_Project
             }
         }
 
+        public static int GetSmallestIndex(List<int> sum, int[] usedFeatures)
+        {
+            int min = int.MaxValue, index = -1;
+            for(int i = 0; i < sum.Count; i++)
+            {
+                if(sum[i] > 0 && usedFeatures[i] != 1 && sum[i] < min)
+                {
+                    min = sum[i];
+                    index = i;
+                }
+            }
+            return index;
+        }
 
         static void Main(string[] args)
         {
@@ -106,7 +119,7 @@ namespace AlgorithmsAndComputability_Project
             ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
             //after having above, we can go with implementation of the pseudocode
 
-            List<int> sum = SumExperts(experts, noOfFeatures, noOfExperts);
+            List<int> sum = SumExperts(experts, noOfFeatures);
 
             CalculateExpertsWeights(ref experts, sum); //must be executed each time when sum changes
 
@@ -126,22 +139,19 @@ namespace AlgorithmsAndComputability_Project
             int[] usedFeatures = new int[noOfFeatures];
             int oldProjects = 0;
             bool sumChanged = true;
-            while(sumChanged && (experts.Count > 0 || sumProjects > 0))
+            var projectSum = SumProjectsVector(projects, noOfFeatures);
+            while ((sumChanged = AreExpertsAssignable(projectSum, sum)) && (experts.Count > 0 || sumProjects > 0))
             {
                 //TODO
+                SetUsedFeatures(projectSum, sum, usedFeatures);
                 oldProjects = sumProjects;
                 int diff = 0;
                 //condition is wrong
-                var filteredSum = sum.Where(p => p > 0);
-                filteredSum = filteredSum
-                    .Select((val, i) => new { Value = val, Index = i })
-                    .Where(p => usedFeatures[p.Index] != 1)
-                    .Select(p => p.Value);
-                if(filteredSum == null || filteredSum.Count() <= 0)
+                int indSmall = GetSmallestIndex(sum, usedFeatures);
+                if(indSmall == -1)
                 {
                     break;
                 }
-                int indSmall = sum.IndexOf(filteredSum.Min());
                 if(projects[indProj].projectVector[indSmall] > 0)
                 {
                     if(projects[indProj].projectVector[indSmall] < sum[indSmall])
@@ -150,12 +160,14 @@ namespace AlgorithmsAndComputability_Project
                         //sum[indSmall] -= projects[indProj].projectVector[indSmall];
                         sumProjects -= projects[indProj].projectVector[indSmall];
                         projects[indProj].projectVector[indSmall] = 0;
+                        projectSum[indSmall] -= diff;
                     }
                     else
                     {
                         diff = sum[indSmall];
                         projects[indProj].projectVector[indSmall] -= sum[indSmall];
                         sumProjects -= sum[indSmall];
+                        projectSum[indSmall] -= diff;
                         //sum[indSmall] = 0;
                     }
                 }
@@ -164,7 +176,6 @@ namespace AlgorithmsAndComputability_Project
                 if(indProj == projects.Count - 1)
                 {
                     indProj = 0;
-                    usedFeatures[indSmall] = 1;
                     if(sumProjects == oldProjects)
                     {
                         sumChanged = false;
@@ -177,6 +188,27 @@ namespace AlgorithmsAndComputability_Project
             }
             Console.WriteLine();
             PrintVector(projects);
+        }
+        public static bool AreExpertsAssignable(List<int> sumProjects, List<int> sumExperts)
+        {
+            for(int i = 0; i < sumProjects.Count; i++)
+            {
+                if(sumProjects[i] > 0 && sumExperts[i] > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public static void SetUsedFeatures(List<int> sumProjects, List<int> sumExperts, int[] usedFeatures)
+        {
+            for(int i = 0; i < sumProjects.Count; i++)
+            {
+                if(sumProjects[i] == 0 || sumExperts[i] == 0)
+                {
+                    usedFeatures[i] = 1;
+                }
+            }
         }
         public static void RemoveExpertsFromSum(List<Expert> experts, List<int> sum, int diff)
         {
@@ -235,20 +267,34 @@ namespace AlgorithmsAndComputability_Project
             le.Sort(expertComparison);
         }
 
-        public static List<int> SumExperts(List<Expert> le, int noOfFeatures, int noOfExperts)
+        public static List<int> SumExperts(List<Expert> le, int noOfFeatures)
         {
             List<int> sum = new List<int>();
 
             for(int i = 0; i < noOfFeatures; i++)
             {
                 int sumField = 0;
-                for(int j = 0; j < noOfExperts; j++)
+                for(int j = 0; j < le.Count; j++)
                 {
-                    sumField += le.ElementAt(j).expertVector.ElementAt(i);
+                    sumField += le[j].expertVector[i];
                 }
-                sum.Insert(i, sumField);
+                sum.Add(sumField);
             }
 
+            return sum;
+        }
+        public static List<int> SumProjectsVector(List<Project> p, int featureCount)
+        {
+            List<int> sum = new List<int>();
+
+            for(int i = 0; i < featureCount; i++)
+            {
+                sum.Add(0);
+                for(int j = 0; j < p.Count; j++)
+                {
+                    sum[i] += p[j].projectVector[i];
+                }
+            }
             return sum;
         }
         //suma moze sie *****ć przy przekroczeniu limitu inta : (
@@ -267,7 +313,7 @@ namespace AlgorithmsAndComputability_Project
 
         public static void ProcessCSV(ref List<Project> projects, ref List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
         {
-            string fileName = "INPUT3.csv";
+            string fileName = "INPUT.csv";
             string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
 
             using (StreamReader sr = new StreamReader(path))
