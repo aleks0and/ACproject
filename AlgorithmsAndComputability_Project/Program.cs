@@ -21,6 +21,46 @@ namespace AlgorithmsAndComputability_Project
                 weight = w;
                 assignedProject = a;
             }
+
+            public override string ToString()
+            {
+                string s = "[";
+                for(int i = 0; i < expertVector.Count; i++)
+                {
+                    s += expertVector[i] + ", ";
+                }
+                s += "] " + weight;
+                return s;
+            }
+        }
+
+        public class ExpertComparison : IComparer<Expert>
+        {
+            private List<int> _expertSum;
+            public ExpertComparison(List<int> expertSum)
+            {
+                _expertSum = expertSum;
+                _expertSum = _expertSum
+                    .Select((e, i) => new KeyValuePair<int, int>(e, i))
+                    .OrderBy(e => e.Key)
+                    .Select(e => e.Value)
+                    .ToList();
+            }
+            public int Compare(Expert x, Expert y)
+            {
+                for(int i = 0; i < _expertSum.Count; i++)
+                {
+                    if(x.expertVector[_expertSum[i]] == 1 && y.expertVector[_expertSum[i]] == 0)
+                    {
+                        return -1;
+                    }
+                    else if(x.expertVector[_expertSum[i]] == 0 && y.expertVector[_expertSum[i]] == 1)
+                    {
+                        return 1;
+                    }
+                }
+                return y.weight - x.weight;
+            }
         }
 
         public struct Project
@@ -30,6 +70,14 @@ namespace AlgorithmsAndComputability_Project
             public Project(List<int> p)
             {
                 projectVector = p;
+            }
+        }
+
+        public static void PrintExperts(List<Expert> experts)
+        {
+            foreach(var expert in experts)
+            {
+                Console.WriteLine(expert);
             }
         }
 
@@ -44,17 +92,19 @@ namespace AlgorithmsAndComputability_Project
 
             //processing csv (assigning values to projects, experts, noOfProjects, noOfExperts, noOfFeatures)
             ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
-
-
-
             //after having above, we can go with implementation of the pseudocode
 
             List<int> sum = SumExperts(experts, noOfFeatures, noOfExperts);
 
             CalculateExpertsWeights(ref experts, sum); //must be executed each time when sum changes
 
-            SortExperts(ref experts);
-            
+            SortExperts(ref experts, sum);
+            foreach(var feat in sum)
+            {
+                Console.Write(feat + " ");
+            }
+            Console.WriteLine();
+            PrintExperts(experts);
             int indProj = 0;
             List<int> oldSum = new List<int>();
             
@@ -101,9 +151,10 @@ namespace AlgorithmsAndComputability_Project
             }
         }
 
-        public static void SortExperts(ref List<Expert> le)
+        public static void SortExperts(ref List<Expert> le, List<int> expertSum)
         {
-            //TODO
+            var expertComparison = new ExpertComparison(expertSum);
+            le.Sort(expertComparison);
         }
 
         public static List<int> SumExperts(List<Expert> le, int noOfFeatures, int noOfExperts)
