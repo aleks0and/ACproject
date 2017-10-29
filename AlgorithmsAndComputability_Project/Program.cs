@@ -71,15 +71,27 @@ namespace AlgorithmsAndComputability_Project
             {
                 projectVector = p;
             }
-        }
 
-        public static void PrintExperts(List<Expert> experts)
-        {
-            foreach(var expert in experts)
+            public override string ToString()
             {
-                Console.WriteLine(expert);
+                string s = "[";
+                for (int i = 0; i < projectVector.Count; i++)
+                {
+                    s += projectVector[i] + ", ";
+                }
+                s += "] ";
+                return s;
             }
         }
+
+        public static void PrintVector<T>(List<T> vectors)
+        {
+            foreach(var vector in vectors)
+            {
+                Console.WriteLine(vector);
+            }
+        }
+
 
         static void Main(string[] args)
         {
@@ -99,22 +111,88 @@ namespace AlgorithmsAndComputability_Project
             CalculateExpertsWeights(ref experts, sum); //must be executed each time when sum changes
 
             SortExperts(ref experts, sum);
-            foreach(var feat in sum)
+            PrintVector(projects);
+            Console.WriteLine();
+            foreach (var feat in sum)
             {
                 Console.Write(feat + " ");
             }
             Console.WriteLine();
-            PrintExperts(experts);
+            PrintVector(experts);
             int indProj = 0;
             List<int> oldSum = new List<int>();
-            
-            while(oldSum != sum /*&& (experts are not finished || projects are not finished)*/)
+            int sumProjects = SumProjects(projects);
+            List<Expert> usedExperts = new List<Expert>();
+            int[] usedFeatures = new int[noOfFeatures];
+            int oldProjects = 0;
+            bool sumChanged = true;
+            while(sumChanged && (experts.Count > 0 || sumProjects > 0))
             {
                 //TODO
+                oldProjects = sumProjects;
+                int diff = 0;
+                //condition is wrong
+                var filteredSum = sum.Where(p => p > 0);
+                filteredSum = filteredSum
+                    .Select((val, i) => new { Value = val, Index = i })
+                    .Where(p => usedFeatures[p.Index] != 1)
+                    .Select(p => p.Value);
+                if(filteredSum == null || filteredSum.Count() <= 0)
+                {
+                    break;
+                }
+                int indSmall = sum.IndexOf(filteredSum.Min());
+                if(projects[indProj].projectVector[indSmall] > 0)
+                {
+                    if(projects[indProj].projectVector[indSmall] < sum[indSmall])
+                    {
+                        diff = projects[indProj].projectVector[indSmall];
+                        //sum[indSmall] -= projects[indProj].projectVector[indSmall];
+                        sumProjects -= projects[indProj].projectVector[indSmall];
+                        projects[indProj].projectVector[indSmall] = 0;
+                    }
+                    else
+                    {
+                        diff = sum[indSmall];
+                        projects[indProj].projectVector[indSmall] -= sum[indSmall];
+                        sumProjects -= sum[indSmall];
+                        //sum[indSmall] = 0;
+                    }
+                }
+                RemoveExperts(experts, usedExperts, diff);
+                RemoveExpertsFromSum(usedExperts, sum, diff);
+                if(indProj == projects.Count - 1)
+                {
+                    indProj = 0;
+                    usedFeatures[indSmall] = 1;
+                    if(sumProjects == oldProjects)
+                    {
+                        sumChanged = false;
+                    }
+                }
+                else
+                {
+                    indProj++;
+                }
             }
-
+            Console.WriteLine();
+            PrintVector(projects);
         }
-
+        public static void RemoveExpertsFromSum(List<Expert> experts, List<int> sum, int diff)
+        {
+            for(int i = experts.Count - 1; i > experts.Count - diff - 1; i--)
+            {
+                for(int j = 0; j < sum.Count; j++)
+                {
+                    sum[j] -= experts[i].expertVector[j];
+                }
+            }
+        }
+        public static void RemoveExperts(List<Expert> experts, List<Expert> usedExperts, int diff)
+        {
+            usedExperts.AddRange(experts.GetRange(0, diff));
+            experts.RemoveRange(0, diff);
+        }
         public static void CalculateExpertsWeights(ref List<Expert> le, List<int> sum)
         {
             //finding sumWeight vector (weights of each feature)
@@ -173,10 +251,23 @@ namespace AlgorithmsAndComputability_Project
 
             return sum;
         }
+        //suma moze sie *****ć przy przekroczeniu limitu inta : (
+        public static int SumProjects(List<Project> p)
+        {
+            int sum = 0;
+            for(int i = 0; i < p.Count; i++)
+            {
+                for(int j = 0; j < p[i].projectVector.Count; j++)
+                {
+                    sum += p[i].projectVector[j];
+                }
+            }
+            return sum;
+        }
 
         public static void ProcessCSV(ref List<Project> projects, ref List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
         {
-            string fileName = "INPUT.csv";
+            string fileName = "INPUT3.csv";
             string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
 
             using (StreamReader sr = new StreamReader(path))
@@ -230,7 +321,5 @@ namespace AlgorithmsAndComputability_Project
                 }
             }
         }
-        
-
     }
 }
