@@ -26,7 +26,7 @@ namespace AlgorithmsAndComputability_Project
             {
                 s += expertVector[i] + ", ";
             }
-            s += "] " + weight;
+            s += "] weight: " + weight;
             if (assignedProject != null)
             {
                 s += " project assigned: " + assignedProject.Id + " feature used: " + (featureUsed);

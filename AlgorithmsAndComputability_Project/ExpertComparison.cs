@@ -18,20 +18,38 @@ namespace AlgorithmsAndComputability_Project
                 .Select(e => e.Value)
                 .ToList();
         }
+
+        //public int Compare(Expert x, Expert y)
+        //{
+        //    for (int i = 0; i < _expertSum.Count; i++)
+        //    {
+        //        if (x.expertVector[_expertSum[i]] == 1 && y.expertVector[_expertSum[i]] == 0)
+        //        {
+        //            return -1;
+        //        }
+        //        else if (x.expertVector[_expertSum[i]] == 0 && y.expertVector[_expertSum[i]] == 1)
+        //        {
+        //            return 1;
+        //        }
+        //    }
+        //    return y.weight - x.weight;
+        //}
+
+        //po odwroceniu sortowania
         public int Compare(Expert x, Expert y)
         {
             for (int i = 0; i < _expertSum.Count; i++)
             {
                 if (x.expertVector[_expertSum[i]] == 1 && y.expertVector[_expertSum[i]] == 0)
                 {
-                    return -1;
+                    return 1;
                 }
                 else if (x.expertVector[_expertSum[i]] == 0 && y.expertVector[_expertSum[i]] == 1)
                 {
-                    return 1;
+                    return -1;
                 }
             }
-            return y.weight - x.weight;
+            return x.weight - y.weight;
         }
     }
 }

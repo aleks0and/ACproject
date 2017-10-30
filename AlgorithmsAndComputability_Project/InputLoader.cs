@@ -67,15 +67,15 @@ namespace AlgorithmsAndComputability_Project
                 }
             }
         }
-        public static void ProcessInput(List<Project> projects, List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
+        public static void ProcessInput(ref List<Project> projects, ref List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures, char delimiter, string path)
         {
-            string fileName = "INPUT.txt";
-            string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
+            //string fileName = "inputtext.txt";
+            //string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
             using (StreamReader sr = new StreamReader(path))
             {
                 //getting data from first line
                 string currentLine = sr.ReadLine();
-                char delimiter = ',';
+                //char delimiter = ',';
                 string[] values = currentLine.Split(delimiter);
                 noOfProjects = Convert.ToInt32(values[0]);
                 noOfExperts = Convert.ToInt32(values[1]);

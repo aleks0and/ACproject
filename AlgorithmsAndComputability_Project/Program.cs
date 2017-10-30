@@ -9,13 +9,15 @@ namespace AlgorithmsAndComputability_Project
 {
     class Program
     {
-
         public static void PrintVector<T>(List<T> vectors)
         {
+            int no = 0;
             foreach(var vector in vectors)
             {
                 Console.WriteLine(vector);
+                no++;
             }
+            Console.WriteLine("Number of printed lines: " + no);
         }
 
         public static int GetSmallestIndex(List<int> sum, int[] usedFeatures)
@@ -65,19 +67,24 @@ namespace AlgorithmsAndComputability_Project
             int noOfExperts = 0;
             int noOfFeatures = 0;
             //processing csv (assigning values to projects, experts, noOfProjects, noOfExperts, noOfFeatures)
-            InputLoader.ProcessCSV(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures);
+            InputLoader.ProcessInput(ref projects, ref experts, ref noOfProjects, ref noOfExperts, ref noOfFeatures, ',', Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", "inputtext.txt"));
+
             //after having above, we can go with implementation of the pseudocode
             projectsCopy = projects.ConvertAll(p => new Project(p));
             List<int> sum = Expert.SumExperts(experts, noOfFeatures);
             Expert.CalculateExpertsWeights(ref experts, sum); //must be executed each time when sum changes
             Expert.SortExperts(ref experts, sum);
+            Console.WriteLine("Projects vectors before assignment of experts: ");
             PrintVector(projects);
             Console.WriteLine();
+            Console.WriteLine("Sum of all experts' features:");
             foreach (var feat in sum)
             {
                 Console.Write(feat + " ");
             }
             Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Sorted experts vectors with their weights:");
             PrintVector(experts);
             int indProj = 0;
             List<int> oldSum = new List<int>();
@@ -89,7 +96,6 @@ namespace AlgorithmsAndComputability_Project
             var projectSum = Project.SumProjectsVector(projects, noOfFeatures);
             while ((sumChanged = AreExpertsAssignable(projectSum, sum)) && (experts.Count > 0 || sumProjects > 0))
             {
-                //TODO
                 SetUsedFeatures(projectSum, sum, usedFeatures);
                 oldProjects = sumProjects;
                 int diff = 0;
@@ -134,11 +140,13 @@ namespace AlgorithmsAndComputability_Project
                 }
             }
             Console.WriteLine();
+            Console.WriteLine("Projects vectors after assignment of experts:");
             PrintVector(projects);
             Console.WriteLine();
+            Console.WriteLine("Used experts vectors:");
             PrintVector(usedExperts);
             Console.WriteLine();
-            PrintVector(projectsCopy);
+            //PrintVector(projectsCopy);
             Console.ReadLine();
         }
     }
