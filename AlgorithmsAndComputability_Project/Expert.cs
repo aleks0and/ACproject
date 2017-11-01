@@ -34,7 +34,7 @@ namespace AlgorithmsAndComputability_Project
             return s;
         }
 
-        public static void SortExperts(ref List<Expert> le, List<int> expertSum)
+        public static void SortExperts(List<Expert> le, List<int> expertSum)
         {
             var expertComparison = new ExpertComparison(expertSum);
             le.Sort(expertComparison);
@@ -56,7 +56,7 @@ namespace AlgorithmsAndComputability_Project
 
             return sum;
         }
-        public static void CalculateExpertsWeights(ref List<Expert> le, List<int> sum)
+        public static void CalculateExpertsWeights(List<Expert> le, List<int> sum)
         {
             //finding sumWeight vector (weights of each feature)
             List<int> sumTemp = new List<int>(sum);

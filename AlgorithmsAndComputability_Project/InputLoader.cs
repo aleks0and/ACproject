@@ -9,88 +9,37 @@ using System.IO;
 
 namespace AlgorithmsAndComputability_Project
 {
-    class InputLoader
+    public class InputLoader
     {
-        public static void ProcessCSV(ref List<Project> projects, ref List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures)
+        private char _separator;
+        private string _path;
+        public InputLoader(char separator, string path)
         {
-            string fileName = "INPUT.csv";
-            string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
-
-            using (StreamReader sr = new StreamReader(path))
-            {
-                //getting data from first line
-                string currentLine = sr.ReadLine();
-                char delimiter = ';';
-                string[] values = currentLine.Split(delimiter);
-                noOfProjects = Convert.ToInt32(values[0]);
-                noOfExperts = Convert.ToInt32(values[1]);
-                noOfFeatures = Convert.ToInt32(values[2]);
-
-                //reading projects
-                int ind = 0;
-                int temp = noOfProjects;
-                while (temp != 0)
-                {
-                    currentLine = sr.ReadLine();
-                    char delimiter_p = ';';
-                    string[] values_p = currentLine.Split(delimiter_p);
-
-                    List<int> proj = new List<int>();
-                    for (int i = 0; i < noOfFeatures; i++)
-                    {
-                        proj.Insert(i, Convert.ToInt32(values_p[i]));
-                    }
-                    Project p = new Project(proj, ind);
-                    projects.Insert(ind, p);
-                    ind++;
-                    temp--;
-                }
-
-                //reading experts
-                ind = 0;
-                temp = noOfExperts;
-                while (temp != 0)
-                {
-                    currentLine = sr.ReadLine();
-                    char delimiter_p = ';';
-                    string[] values_p = currentLine.Split(delimiter_p);
-
-                    List<int> exp = new List<int>();
-                    for (int i = 0; i < noOfFeatures; i++)
-                    {
-                        exp.Insert(i, Convert.ToInt32(values_p[i]));
-                    }
-                    Expert e = new Expert(exp, -1);
-                    experts.Insert(ind, e);
-                    ind++;
-                    temp--;
-                }
-            }
+            _separator = separator;
+            _path = path;
         }
-        public static void ProcessInput(ref List<Project> projects, ref List<Expert> experts, ref int noOfProjects, ref int noOfExperts, ref int noOfFeatures, char delimiter, string path)
+        public void ProcessInput(List<Project> projects, List<Expert> experts, ref int featureCount, string filename)
         {
-            //string fileName = "inputtext.txt";
-            //string path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\Specification\input", fileName);
-            using (StreamReader sr = new StreamReader(path))
+            string fullPath = Path.Combine(Environment.CurrentDirectory, _path, filename);
+            using (StreamReader sr = new StreamReader(fullPath))
             {
                 //getting data from first line
                 string currentLine = sr.ReadLine();
-                //char delimiter = ',';
-                string[] values = currentLine.Split(delimiter);
-                noOfProjects = Convert.ToInt32(values[0]);
-                noOfExperts = Convert.ToInt32(values[1]);
-                noOfFeatures = Convert.ToInt32(values[2]);
+                string[] values = currentLine.Split(_separator);
+                int projectCount = Convert.ToInt32(values[0]);
+                int expertCount = Convert.ToInt32(values[1]);
+                featureCount = Convert.ToInt32(values[2]);
                 //reading projects
                 int ind = 0;
-                int temp = noOfProjects;
+                int temp = projectCount;
                 while (temp != 0)
                 {
                     currentLine = sr.ReadLine();
-                    char delimiter_p = ',';
+                    char delimiter_p = _separator;
                     string[] values_p = currentLine.Split(delimiter_p);
 
                     List<int> proj = new List<int>();
-                    for (int i = 0; i < noOfFeatures; i++)
+                    for (int i = 0; i < featureCount; i++)
                     {
                         proj.Insert(i, Convert.ToInt32(values_p[i]));
                     }
@@ -101,14 +50,14 @@ namespace AlgorithmsAndComputability_Project
                 }
                 //reading experts
                 ind = 0;
-                temp = noOfExperts;
+                temp = expertCount;
                 while (temp != 0)
                 {
                     currentLine = sr.ReadLine();
-                    char delimiter_p = ',';
+                    char delimiter_p = _separator;
                     string[] values_p = currentLine.Split(delimiter_p);
                     List<int> exp = new List<int>();
-                    for (int i = 0; i < noOfFeatures; i++)
+                    for (int i = 0; i < featureCount; i++)
                     {
                         exp.Insert(i, Convert.ToInt32(values_p[i]));
                     }
