@@ -26,9 +26,8 @@ namespace AlgorithmsAndComputability_Project
             var usedExperts = new List<Expert>();
             int[] usedFeatures = new int[featureCount];
             int oldProjects = 0;
-            bool sumChanged = true;
             var projectSum = Project.SumProjectsVector(projects, featureCount);
-            while ((sumChanged = AreExpertsAssignable(projectSum, sum)) && (experts.Count > 0 || sumProjects > 0))
+            while (AreExpertsAssignable(projectSum, sum) && (experts.Count > 0 || sumProjects > 0))
             {
                 SetUsedFeatures(projectSum, sum, usedFeatures);
                 oldProjects = sumProjects;
@@ -59,11 +58,7 @@ namespace AlgorithmsAndComputability_Project
                 Expert.RemoveExpertsFromSum(usedExperts, sum, diff);
                 if (indProj == projects.Count - 1)
                 {
-                    indProj = 0;
-                    if (sumProjects == oldProjects)
-                    {
-                        sumChanged = false;
-                    }
+                    indProj = 0;        
                 }
                 else
                 {
