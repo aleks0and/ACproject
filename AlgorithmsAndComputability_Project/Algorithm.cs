@@ -10,15 +10,15 @@ namespace AlgorithmsAndComputability_Project
     {
         public List<Expert> Run(List<Project> projects, List<Expert> experts, int featureCount)
         {
-            List<int> sum = Expert.SumExperts(experts, featureCount);
-            Printer.Print(sum, "Sum of experts' features:");
-            Expert.CalculateExpertsWeights(experts, sum); //must be executed each time when sum changes
-            Expert.SortExperts(experts, sum);
+            List<int> sumExperts = Expert.SumExperts(experts, featureCount);
+            Printer.Print(sumExperts, "Sum of experts' features:");
+            Expert.CalculateExpertsWeights(experts, sumExperts); //must be executed each time when sum changes
+            Expert.SortExperts(experts, sumExperts);
             Printer.PrintVector(experts, "Experts after sorting:");
-            return Assignment(projects, experts, featureCount, sum);
+            return Assignment(projects, experts, featureCount, sumExperts);
         }
 
-        private List<Expert> Assignment(List<Project> projects, List<Expert> experts, int featureCount, List<int> sum)
+        private List<Expert> Assignment(List<Project> projects, List<Expert> experts, int featureCount, List<int> sumExperts)
         {
             int indProj = 0;
             var oldSum = new List<int>();
@@ -27,19 +27,19 @@ namespace AlgorithmsAndComputability_Project
             int[] usedFeatures = new int[featureCount];
             int oldProjects = 0;
             var projectSum = Project.SumProjectsVector(projects, featureCount);
-            while (AreExpertsAssignable(projectSum, sum) && (experts.Count > 0 || sumProjects > 0))
+            while (AreExpertsAssignable(projectSum, sumExperts) && (experts.Count > 0 || sumProjects > 0))
             {
-                SetUsedFeatures(projectSum, sum, usedFeatures);
+                SetUsedFeatures(projectSum, sumExperts, usedFeatures);
                 oldProjects = sumProjects;
                 int diff = 0;
-                int indSmall = GetSmallestIndex(sum, usedFeatures);
+                int indSmall = GetSmallestIndex(sumExperts, usedFeatures);
                 if (indSmall == -1)
                 {
                     break;
                 }
                 if (projects[indProj]._projectVector[indSmall] > 0)
                 {
-                    if (projects[indProj]._projectVector[indSmall] < sum[indSmall])
+                    if (projects[indProj]._projectVector[indSmall] < sumExperts[indSmall])
                     {
                         diff = projects[indProj]._projectVector[indSmall];
                         sumProjects -= projects[indProj]._projectVector[indSmall];
@@ -48,14 +48,14 @@ namespace AlgorithmsAndComputability_Project
                     }
                     else
                     {
-                        diff = sum[indSmall];
-                        projects[indProj]._projectVector[indSmall] -= sum[indSmall];
-                        sumProjects -= sum[indSmall];
+                        diff = sumExperts[indSmall];
+                        projects[indProj]._projectVector[indSmall] -= sumExperts[indSmall];
+                        sumProjects -= sumExperts[indSmall];
                         projectSum[indSmall] -= diff;
                     }
                 }
                 Expert.RemoveExperts(experts, usedExperts, diff, projects[indProj], indSmall);
-                Expert.RemoveExpertsFromSum(usedExperts, sum, diff);
+                Expert.RemoveExpertsFromSum(usedExperts, sumExperts, diff);
                 if (indProj == projects.Count - 1)
                 {
                     indProj = 0;        
