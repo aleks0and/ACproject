@@ -12,6 +12,7 @@ namespace ACproject2
         List<int> projectsSum;
         List<Assignment> la; //list of children of a node
         public Assignment parent;
+        public int featureUsed;
         public Assignment(List<int> sum)
         {
             projectsSum = new List<int>(sum);
@@ -20,10 +21,10 @@ namespace ACproject2
 
         public Assignment addExpert(Expert e, int indexFeature)
         {
-            if(projectsSum[indexFeature] > 0)
+            if(projectsSum[indexFeature] > 0 && e.expertVector[indexFeature] > 0)
             {
-                e.featureUsed = indexFeature;
                 Assignment a = new Assignment(projectsSum);
+                a.featureUsed = indexFeature;
                 a.exp = e;
                 a.projectsSum[indexFeature]--;
 

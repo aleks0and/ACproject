@@ -29,7 +29,7 @@ namespace ACproject2
             Printer.PrintVector(projectsCopy, "Projects before assignment:");
 
             Printer.PrintVector(projects, "Projects after assignment: ");
-            Printer.PrintVector(experts, "Unused experts after assignment: ");
+            Printer.PrintVector(experts, "All experts after assignment: ");
             Printer.PrintVector(usedExperts, "Used experts: ");
             if (usedExperts.Count == expectedResult)
             {

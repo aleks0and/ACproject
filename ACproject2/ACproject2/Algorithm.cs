@@ -15,8 +15,8 @@ namespace ACproject2
             Assignment a = new Assignment(projectsSum);
 
             RecursiveAssign(earlierUsed, experts, a, featureCount);
-
-            List<Expert> usedExperts = FindUsedExperts(a.OptimalPath());
+            var path = a.OptimalPath();
+            List<Expert> usedExperts = FindUsedExperts(path);
             AssignExpertsToProjects(projects, usedExperts);
 
             return usedExperts;
@@ -45,8 +45,9 @@ namespace ACproject2
         public List<Expert> FindUsedExperts(Assignment a)
         {
             List<Expert> expe = new List<Expert>();
-            while(a.parent != null)
+            while(a.exp != null)
             {
+                a.exp.featureUsed = a.featureUsed;
                 expe.Add(a.exp);
                 a = a.parent;
             }
