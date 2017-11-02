@@ -51,18 +51,6 @@ namespace ACproject2
             }
             return sum;
         }
-        //suma moze sie *****ć przy przekroczeniu limitu inta : (
-        public static int SumProjects(List<Project> p)
-        {
-            int sum = 0;
-            for (int i = 0; i < p.Count; i++)
-            {
-                for (int j = 0; j < p[i]._projectVector.Count; j++)
-                {
-                    sum += p[i]._projectVector[j];
-                }
-            }
-            return sum;
-        }
+
     }
 }
