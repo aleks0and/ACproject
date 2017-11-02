@@ -1,0 +1,13 @@
+Project#1,Expert#2,Feature#3
+PROJECTS
+number of projects is the first digit in the first line, number of features is the third, values below represent the number of required experts in order to finish the project
+#,#,#,#,#
+#,#,#,#,#
+#,#,#,#,#
+EXPERTS
+number of experts is the second digit in the first line, number of features is the third, below is the set of binary values representing the area of expertise.
+1/0,1/0,1/0,1/0,1/0 
+1/0,1/0,1/0,1/0,1/0 
+1/0,1/0,1/0,1/0,1/0 
+1/0,1/0,1/0,1/0,1/0 
+
