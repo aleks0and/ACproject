@@ -10,7 +10,7 @@ namespace ACproject2
     {
         public Expert exp;
         List<int> projectsSum;
-        List<Assignment> la; //list of children of a node
+        public List<Assignment> la; //list of children of a node
         public Assignment parent;
         public int featureUsed;
         public Assignment(List<int> sum)

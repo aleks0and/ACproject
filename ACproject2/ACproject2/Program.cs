@@ -12,7 +12,7 @@ namespace ACproject2
         {
             var tests = new Dictionary<string, int>();
             //tests.Add("INPUT.csv", 100);
-            //tests.Add("INPUT3.csv", 14);
+            tests.Add("INPUT3.csv", 14);
             tests.Add("test1.csv", 3);
             tests.Add("test2.csv", 3);
             tests.Add("test3.csv", 3);

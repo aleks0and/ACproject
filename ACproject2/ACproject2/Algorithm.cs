@@ -13,18 +13,21 @@ namespace ACproject2
             List<Expert> earlierUsed = new List<Expert>();
             List<int> projectsSum = Project.SumProjectsVector(projects, featureCount);
             Assignment a = new Assignment(projectsSum);
-
-            RecursiveAssign(earlierUsed, experts, a, featureCount);
-            var path = a.OptimalPath();
-            List<Expert> usedExperts = FindUsedExperts(path);
+            int count = 0, max = 0;
+            Assignment maxPathLeaf = null;
+            RecursiveAssign(earlierUsed, experts, a, featureCount, count, ref max, ref maxPathLeaf);
+            List<Expert> usedExperts = FindUsedExperts(maxPathLeaf);
             AssignExpertsToProjects(projects, usedExperts);
 
             return usedExperts;
         }
 
-        public void RecursiveAssign(List<Expert> earlierUsed, List <Expert> experts, Assignment assignment, int featureCount)
+        public bool RecursiveAssign(List<Expert> earlierUsed, List<Expert> experts, Assignment assignment, int featureCount, int lengthCount, ref int maxLength, ref Assignment maxPathLeaf)
         {
             var usedExperts = new List<Expert>(earlierUsed);
+            bool isLeaf = true, isMax = false;
+            int maxIndex = -1;
+            int assignIndex = 0;
             for (int i = 0; i < experts.Count; i++)
             {
                 if(!earlierUsed.Contains(experts[i]))
@@ -35,11 +38,31 @@ namespace ACproject2
                         if(a != null)
                         {
                             usedExperts.Add(experts[i]);
-                            RecursiveAssign(usedExperts, experts, a, featureCount);
+                            var tempMax = RecursiveAssign(usedExperts, experts, a, featureCount, lengthCount + 1, ref maxLength, ref maxPathLeaf);
+                            if(tempMax)
+                            {
+                                isMax = true;
+                                if(maxIndex != -1)
+                                    assignment.la[maxIndex] = null;
+                                maxIndex = assignIndex;
+                            }
+                            else
+                            {
+                                assignment.la[assignIndex] = null;
+                            }
+                            isLeaf = false;
+                            assignIndex++;
                         }
                     }
                 }
             }
+            if(isLeaf && lengthCount > maxLength)
+            {
+                maxLength = lengthCount;
+                isMax = true;
+                maxPathLeaf = assignment;
+            }
+            return isMax;
         }
 
         public List<Expert> FindUsedExperts(Assignment a)
