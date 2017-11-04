@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ACproject2
 {
-    public class Assignment //assignment of all the experts to all the projects
+    public class Assignment
     {
         public Expert exp;
         List<int> projectsSum;

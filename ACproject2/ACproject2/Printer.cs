@@ -20,16 +20,5 @@ namespace ACproject2
             Console.WriteLine("Number of printed lines: " + no);
             Console.WriteLine();
         }
-
-        public static void Print<T>(List<T> vector, string vectorName)
-        {
-            Console.WriteLine(vectorName);
-            foreach (var value in vector)
-            {
-                Console.Write(value + " ");
-            }
-            Console.WriteLine();
-            Console.WriteLine();
-        }
     }
 }

@@ -31,22 +31,5 @@ namespace ACproject2
             }
             return s;
         }
-
-        public static List<int> SumExperts(List<Expert> le, int noOfFeatures)
-        {
-            List<int> sum = new List<int>();
-
-            for (int i = 0; i < noOfFeatures; i++)
-            {
-                int sumField = 0;
-                for (int j = 0; j < le.Count; j++)
-                {
-                    sumField += le[j].expertVector[i];
-                }
-                sum.Add(sumField);
-            }
-
-            return sum;
-        }
     }
 }

@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-
-
 namespace ACproject2
 {
     public class InputLoader

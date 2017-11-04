@@ -24,8 +24,7 @@ namespace ACproject2
         }
 
         public int Id { get { return _id; } set { _id = value; } }
-
-
+        
         public override string ToString()
         {
             string s = "[";
@@ -51,6 +50,5 @@ namespace ACproject2
             }
             return sum;
         }
-
     }
 }
