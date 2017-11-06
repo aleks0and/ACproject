@@ -35,35 +35,5 @@ namespace ACproject2
             return null;
         }
 
-        public Assignment OptimalPath()
-        {
-            int maxPathLength = 0;
-            int pathLength = 0;
-
-            Assignment ret = RecursiveLongestPath(ref maxPathLength, pathLength, this);
-
-            return ret;
-        }
-
-        public Assignment RecursiveLongestPath(ref int maxPathLength, int pathLength, Assignment current)
-        {
-            pathLength++;
-            Assignment a = null;
-            if(current.la.Count == 0)
-            {
-                if (pathLength > maxPathLength)
-                {
-                    maxPathLength = pathLength;
-                    return current;
-                }
-            }
-            foreach(var assi in current.la)
-            {
-                Assignment ret = RecursiveLongestPath(ref maxPathLength, pathLength, assi);
-                if (ret != null)
-                    a = ret;
-            }
-            return a;
-        }
     }
 }
