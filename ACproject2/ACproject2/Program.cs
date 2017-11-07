@@ -29,19 +29,24 @@ namespace ACproject2
             } 
             */
             //first argument is the path to the files second is the name of the files.
-            if (args.Length < 2)
+            if (args.Length < 3)
             {
                 Console.WriteLine("To use the application properly please write \"ACproject2\" directory_of_the_input input_file_name ");
             }
-            else if (args.Length == 2)
+            else if (args.Length == 3)
             {
-                tests.Add(args[1], 3);
-                var loader = new InputLoader(',', args[0]);
-                var tester = new Tester(loader);
-                foreach (var test in tests)
-                {
-                    tester.RunTest(test.Key, test.Value);
+                int expectedResult;
+                if (Int32.TryParse(args[2],out expectedResult))
+                { 
+                    tests.Add(args[1], expectedResult);
+                    var loader = new InputLoader(',', args[0]);
+                    var tester = new Tester(loader);
+                    foreach (var test in tests)
+                    {
+                        tester.RunTest(test.Key, test.Value);
+                    }
                 }
+                
             }
             else
                 Console.WriteLine("incorrect use of the program");
